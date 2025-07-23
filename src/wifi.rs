@@ -51,7 +51,7 @@ impl<'a> WifiConnection<'a> {
         let wifi_driver = WifiDriver::new(modem, event_loop.clone(), default_partition)?;
         let ipv4_config = ipv4::ClientConfiguration::DHCP(ipv4::DHCPClientSettings::default());
         let net_if = EspNetif::new_with_conf(&netif::NetifConfiguration {
-            ip_configuration: ipv4::Configuration::Client(ipv4_config),
+            ip_configuration: Option::from(ipv4::Configuration::Client(ipv4_config)),
             ..netif::NetifConfiguration::wifi_default_client()
         })?;
 

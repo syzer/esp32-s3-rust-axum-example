@@ -10,12 +10,14 @@ use esp_idf_hal::prelude::Peripherals;
 use esp_idf_svc::{eventloop::EspSystemEventLoop, nvs, timer::EspTaskTimerService};
 use log::{error, info};
 use std::thread::sleep;
+use esp_idf_svc::io::vfs::MountedEventfs;
 
 // We can't use #[tokio::main] since we need to initialize eventfd before starting the tokio runtime.
 fn main() {
     esp_idf_sys::link_patches();
     esp_idf_svc::log::EspLogger::initialize_default();
-    esp_idf_svc::io::vfs::initialize_eventfd(1).expect("Failed to initialize eventfd");
+    let _eventfs = esp_idf_svc::io::vfs::MountedEventfs::mount(1)
+        .expect("Failed to mount EventFD filesystem");
 
     let rt = tokio::runtime::Builder::new_current_thread()
         .enable_all()
